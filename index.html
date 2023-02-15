@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<title>FPS to Time converter</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="script.js"></script>
+		<link href="style.css" rel="stylesheet" />
+	</head>
+	<body>
+		<fieldset>
+			<legend>FPS to Time Converter</legend>
+			<label>Number of frames:</label>
+			<input type="number" autocomplete="off" id="totalFrames" name="totalFrames" min="0" max="2073599" maxlength="7" placeholder="0" required>
+			<label style="margin-left: 89px;">Frame rate:</label>
+			<select name="frameRate" id="frameRate">
+				<option value="24">24 fps</option>
+				<option value="25">25 fps</option>
+				<option value="30">30 fps</option>
+				<option value="50">50 fps</option>
+				<option value="60">60 fps</option>
+				<option value="120">120 fps</option>
+				<option value="240">240 fps</option>
+			</select>
+			<button class="clearButton">Clear</button>
+			<button class="exampleButton">Example</button>
+			<label style="margin-left: 115px;">Result:</label>
+			<input type="text" autocomplete="off" id="resultField" name="resultField" placeholder="00:00:00.00" readonly></div>
+		</fieldset>
+	</body>
+</html>
