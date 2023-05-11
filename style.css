@@ -1,56 +1,196 @@
-fieldset {
-	display: inline;
-	width: 320px;
+@import url('https://fonts.googleapis.com/css?family=Roboto&subset=latin,cyrillic');
+
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #1f1f1f;
+	color: #fff; font-family: 'Roboto', sans-serif;
 }
 
-legend {
-	text-align: center;
+div {
+	background: transparent;
+	border: 0;
+	margin: 10px 0 0 0;
+	padding: 5px 10px;
 }
 
-input {
-	margin: 4px 0;
+label[for=numberFrames],
+label[for=frameRate],
+label[for=frameTime],
+label[for=resultField] {
+	font-size: 14px;
+	color: gray;
 }
 
-button {
-	margin: 5px 0 0 105px;
-	width: 112px;
+input[type=number]::placeholder,
+input[type=text]::placeholder {
+	color: gray;
 }
 
-label {
-	margin-left: 40px;
+input[type=number],
+input[type=text],
+select {
+	background-color: transparent;
+	border-color: transparent;
+	border-style: none;
+	color: #fff;
+	outline: none;
 }
 
-#totalFrames, #frameRate {
-	width: 75px;
+select {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
 }
 
-#resultField {
-	width: 80px;
+select:hover {
+	appearance: auto;
+	-webkit-appearance: auto;
+	-moz-appearance: auto;
 }
 
-.clearButton,
-.exampleButton {
-	border: 1px solid #a4afba;
-	border-radius: 3px;
-	cursor: pointer;
-	display: block;
+select option {
+	background: #282828;
+}
+
+select option:checked,
+select option:hover {
+	background: gray;
+	box-shadow: 0 0 10px 100px gray inset;
+}
+
+.wrapper {
+	display: flex;
+	height: 100vh;
+	align-items: center;
+	justify-content: center;
+}
+
+.main-content {
+	background-color: #282828;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 4px;
+	height: 525px;
+	padding: 10px;
+	width: 280px;
+}
+
+.main-title {
+	padding: 0 0 0 10px;
+	font-size: 24px;
+	font-weight: 600;
 	height: 20px;
-	text-align: center;
+	letter-spacing: 1px;
 }
 
-.clearButton:active,
-.exampleButton:active {
-	border-color: #78a2b7 !important;
-	color: #3a728b !important;
+.input-field,
+.select-list,
+.frametime-field,
+.result-field {
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	height: 65px;
+	padding: 5px 0 5px 5px;
 }
 
-.clearButton:focus-visible,
-.exampleButton:focus-visible {
-	box-shadow: 0 0 0 3px lightskyblue;
+.input-field:hover,
+.select-list:hover,
+.frametime-field:hover,
+.result-field:hover {
+	border: 1px solid rgba(255, 255, 255, 0.5);
+	transition: .2s;
 }
 
-.clearButton:hover,
-.exampleButton:hover {
-	border-color: #65a3be;
-	color: #4e879c;
+#numberFrames,
+#frameRate,
+#frameTime,
+#resultField {
+	margin: 4px 0;
+	font-size: 40px;
+	height: 40px;
+	letter-spacing: 1.5px;
+	padding: 0;
+	width: 100%;
+}
+
+.choice_block {
+	height: 50px;
+	margin: 0;
+	padding: 5px 0 0 0;
+	width: 100%;
+}
+
+.choice_block .form-radio {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+.choice_block .form-radio input[type=radio] {
+	cursor: pointer;
+	margin: 4px 0;
+	height: 20px;
+	width: 20px;
+	-webkit-transition: all 0.2s ease;
+	transition: all 0.2s ease;
+}
+
+.choice_block .form-radio input[type=radio]:checked {
+	accent-color: #ffa500;
+	opacity: 1;
+	-webkit-transform: scale(1);
+	transform: scale(1);
+}
+
+.choice_block .form-radio input[type=radio]:not(:checked) {
+	opacity: 0.1;
+	-webkit-transform: scale(0);
+	transform: scale(0);
+}
+
+.choice_block .form-radio label {
+	display: inline-block;
+	cursor: pointer;
+	font-size: 17px;
+	position: absolute;
+	padding-left: 5px;
+	margin: 4px 0px;
+	user-select: none;
+}
+
+.resultViewLabel {
+	padding: 0px;
+	font-size: 15px;
+	color: gray;
+}
+
+.button_block {
+	height: 50px;
+	padding: 0;
+	width: 100%;
+}
+
+.button_block button {
+	background-color: transparent;
+	border-style: none;
+	cursor: pointer;
+	color: #fff;
+	display: inline-block;
+	font-size: 20px;
+	padding: 0;
+	position: relative;
+	height: 40px;
+	width: 128px;
+}
+
+.button_block button:hover {
+	background-color: #3b3b3b;
+	opacity: 0.8;
+	transition: .2s;
+}
+
+.button_block button:disabled {
+	background-color: gray;
+	color: #282828;
+	cursor: not-allowed;
+	opacity: 0.6;
 }
