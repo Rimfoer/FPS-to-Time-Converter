@@ -1,30 +1,136 @@
+<!DOCTYPE html>
 <html>
 	<head>
-		<title>FPS to Time converter</title>
+		<title>Frames to Time converter</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<link rel="stylesheet" href="style.css">
 		<script src="script.js"></script>
-		<link href="style.css" rel="stylesheet" />
 	</head>
 	<body>
-		<fieldset>
-			<legend>FPS to Time Converter</legend>
-			<label>Number of frames:</label>
-			<input type="number" autocomplete="off" id="totalFrames" name="totalFrames" min="0" max="2073599" maxlength="7" placeholder="0" required>
-			<label style="margin-left: 89px;">Frame rate:</label>
-			<select name="frameRate" id="frameRate">
-				<option value="24">24 fps</option>
-				<option value="25">25 fps</option>
-				<option value="30">30 fps</option>
-				<option value="50">50 fps</option>
-				<option value="60">60 fps</option>
-				<option value="120">120 fps</option>
-				<option value="240">240 fps</option>
-			</select>
-			<button class="clearButton">Clear</button>
-			<button class="exampleButton">Example</button>
-			<label style="margin-left: 115px;">Result:</label>
-			<input type="text" autocomplete="off" id="resultField" name="resultField" placeholder="00:00:00.00" readonly></div>
-		</fieldset>
+		<div class="wrapper">
+			<div class="main-content">
+				<div class="main-title">FPS to Time Converter</div>
+				<div class="inner-form">
+					<div class="input-field">
+						<label for="numberFrames">Number of frames:</label>
+						<input type="number" autocomplete="off" id="numberFrames" min="0" max="2073599" maxlength="7" placeholder="0" title="Tip: Press Up/Down Arrow keys to change frame value in this field." required autofocus />
+					</div>
+					<div class="select-list">
+						<label for="frameRate">Framerate:</label>
+						<select id="frameRate" title="Tip: Press Up/Down Arrow keys to change framerate value in this field.">
+							<option value="24">24 fps</option>
+							<option value="25">25 fps</option>
+							<option value="30">30 fps</option>
+							<option value="50">50 fps</option>
+							<option value="60">60 fps</option>
+							<option value="120">120 fps</option>
+							<option value="240">240 fps</option>
+						</select>
+					</div>
+					<div class="frametime-field">
+						<label for="frameTime">Frametime:</label>
+						<input type="text" autocomplete="off" id="frameTime" title="The duration of playback of one frame. Calculated by the formula: 1000 ms/framerate." readonly />
+					</div>
+					<div class="result-field">
+						<label for="resultField">Result:</label>
+						<input type="text" autocomplete="off" id="resultField" placeholder="00:00:00.00" title="The time of any video content is showed as is." readonly />
+					</div>
+					<div class="resultViewLabel">Select a display format for the result:</div>
+					<div class="choice_block">
+						<div class="form-radio">
+							<input type="radio" name="radiobutton" id="frames" value="frames" checked />
+							<label for="frames" title="If you choose this option, the result will be showed in the <HH:MM:SS:FF> format.">Time & frames</label>
+						</div>
+						<div class="form-radio">
+							<input type="radio" name="radiobutton" id="milsec" value="milsec"/>
+							<label for="milsec" title="If you choose this option, the result will be showed in the <HH:MM:SS:MS> format.">Time & milliseconds</label>
+						</div>
+					</div>
+					<div class="button_block">
+						<button class="clearButton" disabled>Clear</button>
+						<button class="exampleButton">Example</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			$(document).ready(function() {
+				getFrameTime(24);
+			});
+
+			$('#numberFrames').on('input', function() {
+				var fps = $('#frameRate').val(), maxValue = parseInt($(this).attr('max')), format = $('input[type="radio"]:checked').val(), invalidValue;
+				if(this.value.length > this.maxLength) { this.value = this.value.slice(0, this.maxLength); alert(`No more than ${this.maxLength} characters are allowed.`); }
+				if(this.value > maxValue) { invalidValue = this.value-maxValue; this.value = this.value-invalidValue; alert(`The maximum allowed value should not exceed ${this.maxValue}.`); }
+				if(this.value == '' || this.value.length == 0 || this.value == 0) {
+					$('.clearButton').prop('disabled', true); $('#resultField').val('');
+				} else {
+					$('.clearButton').prop('disabled', false); $('#resultField').val(getTime(this.value, fps, format));
+				}
+			});
+
+			$('#frameRate').on('change', function() {
+				var frames = $('#numberFrames').val(), valuesArray = [2073599,2159999,2591999,4319999,5183999,10367999,20735999], format = $('input[type="radio"]:checked').val();
+				switch(this.value) {
+					case '24': { inputLimiter(valuesArray[0], 7); break; }
+					case '25': { inputLimiter(valuesArray[1], 7); break; }
+					case '30': { inputLimiter(valuesArray[2], 7); break; }
+					case '50': { inputLimiter(valuesArray[3], 7); break; }
+					case '60': { inputLimiter(valuesArray[4], 7); break; }
+					case '120': { inputLimiter(valuesArray[5], 8); break; }
+					case '240': { inputLimiter(valuesArray[6], 8); break; }
+				}
+				getFrameTime(this.value);
+				if(this.value >= 120) { changePlaceHolder(1); } else { changePlaceHolder(0); }
+				if(frames == '' || frames.length == 0 || frames == 0) {
+					$('.clearButton').prop('disabled', true); $('#resultField').val('');
+				} else {
+					$('.clearButton').prop('disabled', false); $('#resultField').val(getTime(frames, this.value, format));
+				}
+			});
+
+			$('input[type="radio"]').click(function() {
+				var frames = $('#numberFrames').val(), fps = $('#frameRate').val();
+				if(this.value == 'milsec' || this.value == 'frames' && fps >= 120) { changePlaceHolder(1); } else { changePlaceHolder(0); }
+				if(frames == '' || frames.length == 0 || frames == 0) { ; } else { $('#resultField').val(getTime(frames, fps, this.value)); }
+			});
+
+			$('.clearButton').click(function() {
+				var format = $('input[type="radio"]:checked').val();
+				$('#numberFrames, #resultField').val('');
+				$('#frameRate').val('24');
+				getFrameTime(24);
+				inputLimiter(2073599, 7);
+				switch(format) {
+					case 'milsec': { changePlaceHolder(1); break; }
+					case 'frames': { changePlaceHolder(0); break; }
+				}
+				$(this).prop('disabled', true);
+			});
+
+			$('.exampleButton').click(function() {
+				var frameRateArray = [24,25,30,50,60,120,240], valuesArray = [2073599,2159999,2591999,4319999,5183999,10367999,20735999], fps = getRandomArray(frameRateArray),
+				format = $('input[type="radio"]:checked').val(), frames;
+				switch(fps) {
+					case 24: { frames = getRandomInteger(1, valuesArray[0]); inputLimiter(valuesArray[0], 7); break; }
+					case 25: { frames = getRandomInteger(1, valuesArray[1]); inputLimiter(valuesArray[1], 7); break; }
+					case 30: { frames = getRandomInteger(1, valuesArray[2]); inputLimiter(valuesArray[2], 7); break; }
+					case 50: { frames = getRandomInteger(1, valuesArray[3]); inputLimiter(valuesArray[3], 7); break; }
+					case 60: { frames = getRandomInteger(1, valuesArray[4]); inputLimiter(valuesArray[4], 7); break; }
+					case 120: { frames = getRandomInteger(1, valuesArray[5]); inputLimiter(valuesArray[5], 8); break; }
+					case 240: { frames = getRandomInteger(1, valuesArray[6]); inputLimiter(valuesArray[6], 8); break; }
+				}
+				if(format == 'milsec' || format == 'frames' && fps >= 120) { changePlaceHolder(1); } else { changePlaceHolder(0); }
+				$('#numberFrames').val(frames);
+				$('#frameRate').val(fps);
+				getFrameTime(fps);
+				$('#resultField').val(getTime(frames, fps, format));
+				if($('.clearButton').prop('disabled') == false) { ; } else { $('.clearButton').prop('disabled', false); }
+			});
+		</script>
 	</body>
+	<script>
+		console.log('Frames2Time Converter, ver. 1.03\nApril 30 2023\nCreated by Rimfoer.');
+	</script>
 </html>
