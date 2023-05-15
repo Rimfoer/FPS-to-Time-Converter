@@ -60,9 +60,19 @@
 			});
 
 			$('#numberFrames').on('input', function() {
-				var fps = $('#frameRate').val(), maxValue = parseInt($(this).attr('max')), format = $('input[type="radio"]:checked').val(), invalidValue;
-				if(this.value.length > this.maxLength) { this.value = this.value.slice(0, this.maxLength); alert(`No more than ${this.maxLength} characters are allowed.`); }
-				if(this.value > maxValue) { invalidValue = this.value-maxValue; this.value = this.value-invalidValue; alert(`The maximum allowed value should not exceed ${this.maxValue}.`); }
+				var fps = $('#frameRate').val(),
+				    maxValue = parseInt($(this).attr('max')),
+				    format = $('input[type="radio"]:checked').val(),
+				    invalidValue;
+				if(this.value.length > this.maxLength) {
+					this.value = this.value.slice(0, this.maxLength);
+					alert(`No more than ${this.maxLength} characters are allowed.`);
+				}
+				if(this.value > maxValue) {
+					invalidValue = this.value-maxValue;
+					this.value = this.value-invalidValue;
+					alert(`The maximum allowed value should not exceed ${this.maxValue}.`);
+				}
 				if(this.value == '' || this.value.length == 0 || this.value == 0) {
 					$('.clearButton').prop('disabled', true); $('#resultField').val('');
 				} else {
@@ -71,7 +81,9 @@
 			});
 
 			$('#frameRate').on('change', function() {
-				var frames = $('#numberFrames').val(), valuesArray = [2073599,2159999,2591999,4319999,5183999,10367999,20735999], format = $('input[type="radio"]:checked').val();
+				var frames = $('#numberFrames').val(),
+				    valuesArray = [2073599,2159999,2591999,4319999,5183999,10367999,20735999],
+				    format = $('input[type="radio"]:checked').val();
 				switch(this.value) {
 					case '24': { inputLimiter(valuesArray[0], 7); break; }
 					case '25': { inputLimiter(valuesArray[1], 7); break; }
@@ -110,8 +122,11 @@
 			});
 
 			$('.exampleButton').click(function() {
-				var frameRateArray = [24,25,30,50,60,120,240], valuesArray = [2073599,2159999,2591999,4319999,5183999,10367999,20735999], fps = getRandomArray(frameRateArray),
-				format = $('input[type="radio"]:checked').val(), frames;
+				var frameRateArray = [24,25,30,50,60,120,240],
+				    valuesArray = [2073599,2159999,2591999,4319999,5183999,10367999,20735999],
+				    fps = getRandomArray(frameRateArray),
+				    format = $('input[type="radio"]:checked').val(),
+				    frames;
 				switch(fps) {
 					case 24: { frames = getRandomInteger(1, valuesArray[0]); inputLimiter(valuesArray[0], 7); break; }
 					case 25: { frames = getRandomInteger(1, valuesArray[1]); inputLimiter(valuesArray[1], 7); break; }
