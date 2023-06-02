@@ -56,7 +56,7 @@
 		</div>
 		<script>
 			$(document).ready(function() {
-				getFrameTime(24);
+				getFrameTime($('#frameRate').val());
 			});
 
 			$('#numberFrames').on('input', function() {
@@ -74,9 +74,11 @@
 					alert(`The maximum allowed value should not exceed ${this.maxValue}.`);
 				}
 				if(this.value == '' || this.value.length == 0 || this.value == 0) {
-					$('.clearButton').prop('disabled', true); $('#resultField').val('');
+					$('.clearButton').prop('disabled', true);
+					$('#resultField').val('');
 				} else {
-					$('.clearButton').prop('disabled', false); $('#resultField').val(getTime(this.value, fps, format));
+					$('.clearButton').prop('disabled', false);
+					$('#resultField').val(getTime(this.value, fps, format));
 				}
 			});
 
@@ -94,18 +96,33 @@
 					case '240': { inputLimiter(valuesArray[6], 8); break; }
 				}
 				getFrameTime(this.value);
-				if(this.value >= 120) { changePlaceHolder(1); } else { changePlaceHolder(0); }
-				if(frames == '' || frames.length == 0 || frames == 0) {
-					$('.clearButton').prop('disabled', true); $('#resultField').val('');
+				if(this.value >= 120) {
+					changePlaceHolder(1);
 				} else {
-					$('.clearButton').prop('disabled', false); $('#resultField').val(getTime(frames, this.value, format));
+					changePlaceHolder(0);
+				}
+				if(frames == '' || frames.length == 0 || frames == 0) {
+					$('.clearButton').prop('disabled', true);
+					$('#resultField').val('');
+				} else {
+					$('.clearButton').prop('disabled', false);
+					$('#resultField').val(getTime(frames, this.value, format));
 				}
 			});
 
 			$('input[type="radio"]').click(function() {
-				var frames = $('#numberFrames').val(), fps = $('#frameRate').val();
-				if(this.value == 'milsec' || this.value == 'frames' && fps >= 120) { changePlaceHolder(1); } else { changePlaceHolder(0); }
-				if(frames == '' || frames.length == 0 || frames == 0) { ; } else { $('#resultField').val(getTime(frames, fps, this.value)); }
+				var frames = $('#numberFrames').val(),
+				    fps = $('#frameRate').val();
+				if(this.value == 'milsec' || this.value == 'frames' && fps >= 120) {
+					changePlaceHolder(1);
+				} else {
+					changePlaceHolder(0);
+				}
+				if(frames == '' || frames.length == 0 || frames == 0) {
+					;
+				} else {
+					$('#resultField').val(getTime(frames, fps, this.value));
+				}
 			});
 
 			$('.clearButton').click(function() {
@@ -136,12 +153,20 @@
 					case 120: { frames = getRandomInteger(1, valuesArray[5]); inputLimiter(valuesArray[5], 8); break; }
 					case 240: { frames = getRandomInteger(1, valuesArray[6]); inputLimiter(valuesArray[6], 8); break; }
 				}
-				if(format == 'milsec' || format == 'frames' && fps >= 120) { changePlaceHolder(1); } else { changePlaceHolder(0); }
+				if(format == 'milsec' || format == 'frames' && fps >= 120) {
+					changePlaceHolder(1);
+				} else {
+					changePlaceHolder(0);
+				}
 				$('#numberFrames').val(frames);
 				$('#frameRate').val(fps);
 				getFrameTime(fps);
 				$('#resultField').val(getTime(frames, fps, format));
-				if($('.clearButton').prop('disabled') == false) { ; } else { $('.clearButton').prop('disabled', false); }
+				if($('.clearButton').prop('disabled') == false) {
+					;
+				} else {
+					$('.clearButton').prop('disabled', false);
+				}
 			});
 		</script>
 	</body>
