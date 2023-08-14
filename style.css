@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto&subset=latin,cyrillic');
+@import url('https://fonts.googleapis.com/css?family=Roboto&subset=latin');
 
 body {
 	margin: 0;
@@ -17,7 +17,7 @@ div {
 label[for=numberFrames],
 label[for=frameRate],
 label[for=frameTime],
-label[for=resultField] {
+label[for=timecode] {
 	font-size: 14px;
 	color: gray;
 }
@@ -86,7 +86,7 @@ select option:hover {
 .input-field,
 .select-list,
 .frametime-field,
-.result-field {
+.timecode-field {
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	height: 65px;
 	padding: 5px 0 5px 5px;
@@ -95,7 +95,7 @@ select option:hover {
 .input-field:hover,
 .select-list:hover,
 .frametime-field:hover,
-.result-field:hover {
+.timecode-field:hover {
 	border: 1px solid rgba(255, 255, 255, 0.5);
 	transition: .2s;
 }
@@ -103,7 +103,7 @@ select option:hover {
 #numberFrames,
 #frameRate,
 #frameTime,
-#resultField {
+#timecode {
 	margin: 4px 0;
 	font-size: 40px;
 	height: 40px;
@@ -159,7 +159,7 @@ select option:hover {
 
 .resultViewLabel {
 	padding: 0px;
-	font-size: 15px;
+	font-size: 14px;
 	color: gray;
 }
 
