@@ -157,7 +157,7 @@ select option:hover {
 	user-select: none;
 }
 
-.resultViewLabel {
+.timecodeViewLabel {
 	padding: 0px;
 	font-size: 14px;
 	color: gray;
