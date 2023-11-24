@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&subset=latin');
 
+html {
+	overflow: hidden;
+}
+
 body {
 	margin: 0;
 	padding: 0;
@@ -16,7 +20,6 @@ div {
 
 label[for=numberFrames],
 label[for=frameRate],
-label[for=frameTime],
 label[for=timecode] {
 	font-size: 14px;
 	color: gray;
@@ -59,6 +62,18 @@ select option:hover {
 	box-shadow: 0 0 10px 100px gray inset;
 }
 
+select optgroup {
+	background: #282828;
+	color: gray;
+	font-size: 32px;
+	font-weight: lighter;
+}
+
+select optgroup option {
+	color: #fff;
+	font-size: 40px;
+}
+
 .wrapper {
 	display: flex;
 	height: 100vh;
@@ -85,7 +100,6 @@ select option:hover {
 
 .input-field,
 .select-list,
-.frametime-field,
 .timecode-field {
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	height: 65px;
@@ -94,7 +108,6 @@ select option:hover {
 
 .input-field:hover,
 .select-list:hover,
-.frametime-field:hover,
 .timecode-field:hover {
 	border: 1px solid rgba(255, 255, 255, 0.5);
 	transition: .2s;
@@ -102,7 +115,6 @@ select option:hover {
 
 #numberFrames,
 #frameRate,
-#frameTime,
 #timecode {
 	margin: 4px 0;
 	font-size: 40px;
