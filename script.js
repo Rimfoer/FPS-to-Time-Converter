@@ -2,31 +2,42 @@ function formatHHMMSS(num) {
 	return num.toString().padStart(2, '0');
 }
 
-function formatMilsecs(ms) {
+function formatMS(ms) {
 	return ms.toString().padStart(3, '0');
 }
 
 function formatFrames(frames, frameRate) {
-	if(frames < 10 & frameRate < 120) {
-		return frames.toString().padStart(2, '0');
-	} else if(frames < 10 & frameRate >= 120 || frames >= 10 & frames < 100 & frameRate >= 120) {
-		return frames.toString().padStart(3, '0');
+	if(frames < 10 & frameRate < 100) {
+		return String(frames).padStart(2, '0');
+	} else if(frames < 10 & frameRate >= 100 || frames >= 10 & frames < 100 & frameRate >= 100) {
+		return String(frames).padStart(3, '0');
 	} else {
-		return frames;
+		return String(frames);
 	}
 }
 
-function getTime(frame, fps, format) {
+function getTime(frame, fps) {
 	var time = Math.floor(frame/fps),
 	    hours = formatHHMMSS(Math.floor(time/3600)),
 	    minutes = formatHHMMSS(Math.floor((time-hours*3600)/60)),
-	    seconds = formatHHMMSS(time-(hours*3600+minutes*60)),
-	    frames = formatFrames(frame%fps, fps),
-	    milsecs = formatMilsecs(Math.floor(1000*(frame%fps)/fps));
+	    seconds = formatHHMMSS(time-(hours*3600+minutes*60));
 	switch(format) {
-		case 'frames': { return `${hours}:${minutes}:${seconds}.${frames}`; break; }
-		case 'milsec': { return `${hours}:${minutes}:${seconds}.${milsecs}`; break; }
+		case 'frames': {
+			var frames = formatFrames(frame%fps, fps);
+			return `${hours}:${minutes}:${seconds}.${frames}`;
+			break;
+		}
+		case 'milsec': {
+			var milliseconds = formatMS(Math.floor(1000*(frame%fps)/fps));
+			return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+			break;
+		}
 	}
+}
+
+function userInputLimiter(fps) {
+	var maxValue = Number((359999*fps)+(fps-1)), maxLength = String(maxValue).length;
+	$('#numberFrames').attr({'max': maxValue, 'maxlength': Number(maxLength)});
 }
 
 function getRandomInteger(min, max) {
@@ -37,19 +48,75 @@ function getRandomArray(arr) {
 	return arr[Math.floor(Math.random()*arr.length)];
 }
 
-function inputLimiter(max, maxL) {
-	$('#numberFrames').attr({'max': max, 'maxlength': maxL});
-}
-
-function changePlaceHolder(ph) {
-	switch(ph) {
-		case 'std': { $('#timecode').prop('placeholder', '00:00:00.00'); break; }
-		case 'ext': { $('#timecode').prop('placeholder', '00:00:00.000'); break; }
+function changePlaceHolder() {
+	if(format == 'milsec' || format == 'frames' && frameRate >= 100) {
+		$('#timecode').prop('placeholder', '00:00:00.000');
+	} else {
+		$('#timecode').prop('placeholder', '00:00:00.00');
 	}
 }
 
-function getFrameTime(frameRate) {
-	var fps = frameRate || 24,
-	    ft = 1000/fps, ms = ft.toString().substr(0,4);
-	$('#frameTime').val(`${ms} ms`);
+function alertViewer(msg, value) {
+	var val = value || 0;
+	switch(msg) {
+		case 'frameRateOverMaxLength': { alert(`No more than three characters are allowed.`);  break; }
+		case 'overMaxLength': { alert(`No more than ${val} characters are allowed.`); break; }
+		case 'overMaxValue': { alert(`The maximum allowed value should not exceed ${val}.`); break; }
+		case 'skipStep': { alert(`You intentionally canceled the action or accidentally pressed the Esc key, so this step will be skipped.`); break; }
+		case 'wrongValue': { alert(`It was the reckless decision.`); break; }
+	}
+}
+
+function checkValid() {
+	var maxValue = parseInt($('#numberFrames').attr('max')), maxLength = $('#numberFrames').attr('maxlength');
+	if(numberFrames == '' || numberFrames.length == 0 || numberFrames == 0) {
+		$('#numberFrames').val('');
+		$('#timecode').val('');
+		$('.clearButton').prop('disabled', true);
+	} else if(numberFrames.length > maxLength) {
+		numberFrames = numberFrames.slice(0, maxLength);
+		$('#numberFrames').val(numberFrames);
+		alertViewer('overMaxLength', maxLength);
+	} else if(numberFrames > maxValue) {
+		$('#timecode').val('');
+		alertViewer('overMaxValue', maxValue);
+	} else {
+		$('#timecode').val(getTime(numberFrames, frameRate));
+		$('.clearButton').prop('disabled', false);
+	}
+}
+
+function addCustomFPS() {
+	var optionCount = Number($('#frameRate option').length-1), result = Number(prompt(`Please, enter a value that you want:`));
+	if(result == null || result == '' || result == undefined) {
+		alertViewer('skipStep');
+		$('#frameRate').val(frameRate);
+	} else if(isNaN(result)) {
+		alertViewer('wrongValue');
+		$('#frameRate').val(frameRate);
+	} else if(String(result).length > 3) {
+		alertViewer('frameRateOverMaxLength');
+		$('#frameRate').val(frameRate);
+	} else {
+		if(!$('#frameRate optgroup').attr('class')) {
+			$(`#frameRate option:nth-child(${optionCount})`).after($('<optgroup>', { 'class': 'added', 'label': `Added` }));
+		}
+		$('#frameRate').children('.added').append($('<option>', { 'value': result, 'text': `${result} fps` }));
+		$('#frameRate').val(result);
+		frameRate = result;
+		if(restoreData == 'enabled') { $.Storage.set('currFrameRate', result); }
+		userInputLimiter(result);
+		changePlaceHolder();
+		if(numberFrames > 0) { checkValid(); }
+	}
+}
+
+function checkRestoreData() {
+	if($.Storage.get('restoreData') == 'enabled') {
+		$.Storage.set('restoreData', 'disabled');
+		restoreData = 'disabled';
+	} else {
+		$.Storage.set('restoreData', 'enabled');
+		restoreData = 'enabled';
+	}
 }
