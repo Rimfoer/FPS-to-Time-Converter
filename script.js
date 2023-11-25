@@ -6,7 +6,7 @@ function formatMS(ms) {
 	return ms.toString().padStart(3, '0');
 }
 
-function formatFrames(frames, frameRate) {
+function formatFrames(frames) {
 	if(frames < 10 & frameRate < 100) {
 		return String(frames).padStart(2, '0');
 	} else if(frames < 10 & frameRate >= 100 || frames >= 10 & frames < 100 & frameRate >= 100) {
@@ -23,7 +23,7 @@ function getTime(frame, fps) {
 	    seconds = formatHHMMSS(time-(hours*3600+minutes*60));
 	switch(format) {
 		case 'frames': {
-			var frames = formatFrames(frame%fps, fps);
+			var frames = formatFrames(frame%fps);
 			return `${hours}:${minutes}:${seconds}.${frames}`;
 			break;
 		}
