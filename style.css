@@ -6,6 +6,13 @@
 		align-items: center;
 		justify-content: center;
 	}
+
+	.main-container {
+		background-color: #282828;
+		height: 640px;
+		padding: 10px;
+		width: 360px;
+	}
 }
 
 html {
