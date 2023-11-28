@@ -8,7 +8,8 @@ body {
 	margin: 0;
 	padding: 0;
 	background-color: #1f1f1f;
-	color: #fff; font-family: 'Roboto', sans-serif;
+	color: #fff;
+	font-family: 'Roboto', sans-serif;
 }
 
 div {
@@ -81,21 +82,26 @@ select optgroup option {
 	justify-content: center;
 }
 
+.inner-form {
+	margin: 0;
+}
+
 .main-content {
 	background-color: #282828;
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	border-radius: 4px;
-	height: 525px;
+	height: 440px;
 	padding: 10px;
 	width: 280px;
 }
 
 .main-title {
-	padding: 0 0 0 10px;
-	font-size: 24px;
+	padding: 0px 0px;
+	font-size: 20px;
 	font-weight: 600;
 	height: 20px;
 	letter-spacing: 1px;
+	text-align: center;
 }
 
 .input-field,
