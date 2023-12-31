@@ -53,7 +53,7 @@
 			</div>
 		</div>
 		<script>
-			var numberFrames, frameRate, restoreData, format = $('input[type="radio"]:checked').val();
+			var numberFrames, frameRate, restoreData, format = $('input[type="radio"]:checked').val(), frameRateArray = [24,25,30,50,60,120,240];
 
 			$(document).ready(function() {
 				if(!$.Storage.get('currNumberFrames') || !$.Storage.get('currFrameRate') || !$.Storage.get('restoreData')) {
@@ -61,15 +61,12 @@
 				}
 
 				if($.Storage.get('restoreData') == 'enabled') {
-					numberFrames = $.Storage.get('currNumberFrames'),
-					frameRate = $.Storage.get('currFrameRate'),
-					restoreData = $.Storage.get('restoreData');
-
-					if(numberFrames == '0' || numberFrames == '') {
-						$('#frameRate').val(frameRate);
+					numberFrames = $.Storage.get('currNumberFrames'), frameRate = Number($.Storage.get('currFrameRate')), restoreData = $.Storage.get('restoreData');
+					if(numberFrames.length == 0 || numberFrames == '') {
+						if(!frameRateArray.includes(frameRate)) { addCustomFPSAuto(frameRate); } else { $('#frameRate').val(frameRate); }
 					} else {
 						$('#numberFrames').val(numberFrames);
-						$('#frameRate').val(frameRate);
+						if(!frameRateArray.includes(frameRate)) { addCustomFPSAuto(frameRate); } else { $('#frameRate').val(frameRate); }
 						$('#timecode').val(getTime(numberFrames, frameRate));
 						userInputLimiter(frameRate);
 						$('.clearButton').prop('disabled', false);
@@ -83,9 +80,7 @@
 
 			$('#numberFrames').on('input', function() {
 				numberFrames = this.value;
-				if(restoreData == 'enabled') {
-					$.Storage.set('currNumberFrames', this.value);
-				}
+				if(restoreData == 'enabled') { $.Storage.set('currNumberFrames', this.value); }
 				checkValid();
 			});
 
@@ -94,9 +89,7 @@
 					addCustomFPS();
 				} else {
 					frameRate = this.value;
-					if(restoreData == 'enabled') {
-						$.Storage.set('currFrameRate', this.value);
-					}
+					if(restoreData == 'enabled') { $.Storage.set('currFrameRate', this.value); }
 					userInputLimiter(this.value);
 					changePlaceHolder();
 					checkValid();
@@ -115,14 +108,12 @@
 				$('#frameRate').val('24');
 				userInputLimiter(24);
 				changePlaceHolder();
-				if(restoreData == 'enabled') {
-					$.Storage.set({'currNumberFrames': numberFrames, 'currFrameRate': frameRate});
-				}
+				if(restoreData == 'enabled') { $.Storage.set({'currNumberFrames': numberFrames, 'currFrameRate': frameRate}); }
 				$(this).prop('disabled', true);
 			});
 
 			$('.exampleButton').click(function() {
-				var frameRateArray = [24,25,30,50,60,120,240], fps = getRandomArray(frameRateArray), frames = getRandomInteger(1, (359999*fps)+(fps-1));
+				var fps = getRandomArray(frameRateArray), frames = getRandomInteger(1, (359999*fps)+(fps-1));
 				numberFrames = frames, frameRate = fps;
 				$('#numberFrames').val(frames);
 				$('#frameRate').val(fps);
