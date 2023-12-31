@@ -20,18 +20,11 @@ function getTime(frame, fps) {
 	var time = Math.floor(frame/fps),
 	    hours = formatHHMMSS(Math.floor(time/3600)),
 	    minutes = formatHHMMSS(Math.floor((time-hours*3600)/60)),
-	    seconds = formatHHMMSS(time-(hours*3600+minutes*60));
+	    seconds = formatHHMMSS(time-(hours*3600+minutes*60)),
+	    frames, milliseconds;
 	switch(format) {
-		case 'frames': {
-			var frames = formatFrames(frame%fps);
-			return `${hours}:${minutes}:${seconds}.${frames}`;
-			break;
-		}
-		case 'milsec': {
-			var milliseconds = formatMS(Math.floor(1000*(frame%fps)/fps));
-			return `${hours}:${minutes}:${seconds}.${milliseconds}`;
-			break;
-		}
+		case 'frames': { frames = formatFrames(frame%fps); return `${hours}:${minutes}:${seconds}.${frames}`; break; }
+		case 'milsec': { milliseconds = formatMS(Math.floor(1000*(frame%fps)/fps)); return `${hours}:${minutes}:${seconds}.${milliseconds}`; break; }
 	}
 }
 
@@ -70,8 +63,7 @@ function alertViewer(msg, value) {
 function checkValid() {
 	var maxValue = parseInt($('#numberFrames').attr('max')), maxLength = $('#numberFrames').attr('maxlength');
 	if(numberFrames == '' || numberFrames.length == 0 || numberFrames == 0) {
-		$('#numberFrames').val('');
-		$('#timecode').val('');
+		$('#numberFrames, #timecode').val('');
 		$('.clearButton').prop('disabled', true);
 	} else if(numberFrames.length > maxLength) {
 		numberFrames = numberFrames.slice(0, maxLength);
@@ -87,7 +79,7 @@ function checkValid() {
 }
 
 function addCustomFPS() {
-	var optionCount = Number($('#frameRate option').length-1), result = Number(prompt(`Please, enter a value that you want:`));
+	var optionCount = Number($('#frameRate option').length-1), result = prompt(`Please enter a value that you want:`);
 	if(result == null || result == '' || result == undefined) {
 		alertViewer('skipStep');
 		$('#frameRate').val(frameRate);
@@ -104,11 +96,19 @@ function addCustomFPS() {
 		$('#frameRate').children('.added').append($('<option>', { 'value': result, 'text': `${result} fps` }));
 		$('#frameRate').val(result);
 		frameRate = result;
-		if(restoreData == 'enabled') { $.Storage.set('currFrameRate', result); }
+		if(restoreData == 'enabled') { $.Storage.set('currFrameRate', String(result)); }
 		userInputLimiter(result);
 		changePlaceHolder();
 		if(numberFrames > 0) { checkValid(); }
 	}
+}
+
+function addCustomFPSAuto(fps) {
+	if(!$('#frameRate optgroup').attr('class')) {
+		$(`#frameRate option:nth-child(7)`).after($('<optgroup>', { 'class': 'added', 'label': 'Added' }));
+	}
+	$('#frameRate').children('.added').append($('<option>', { 'value': fps, 'text': `${fps} fps` }));
+	$('#frameRate').val(fps);
 }
 
 function checkRestoreData() {
